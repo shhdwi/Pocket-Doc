@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pocket_doc/screens/user_homepage.dart';
 import 'package:pocket_doc/themes/theme.dart';
 
 void main() {
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: myTheme,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: UserHomePage(),
     );
   }
 }
