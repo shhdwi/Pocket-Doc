@@ -15,14 +15,86 @@ class _SigninpageState extends State<Signinpage> {
   final AuthService _authService=AuthService();
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.white,
+
       body: SafeArea(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
 
+              Spacer(flex: 1,),
+              Text("Pocket Doc",style: TextStyle(color:Color(0xff447fff),fontSize: 50,fontWeight: FontWeight.bold),),
+              SizedBox(height: 20,),
+              Container(
+                  width: MediaQuery.of(context).size.width-30,
+                  child: Image(image:AssetImage("assets/images/pocdoc.jpg"),fit: BoxFit.fitWidth,)),
+              Spacer(),
+              // InkWell(
+              //
+              //   onTap: () async {
+              //   dynamic result=await _authService.signInWithGoogle();
+              //   if(result==null){
+              //   print("error");
+              //   }
+              //   else {
+              //   print("pappu pass");
+              //   print(result.uid);
+              //   Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //   builder: (BuildContext context) => UserHomePage(),
+              //   ),
+              //   );
+              //
+              //   }},
+              //
+              //   child: Container(
+              //     height: 150,
+              //
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //
+              //       children: [
+              //         Container(
+              //             child:Image(fit: BoxFit.contain, image: AssetImage("assets/images/glogo.png")),
+              //           height: 50,
+              //         ),
+              //         Text(" Sign in with Google",
+              //         style: TextStyle(
+              //           // height: 50,
+              //           color: Colors.black38,
+              //           fontSize: 20,
+              //         ),),
+              //
+              //       ],
+              //     )
+              //   ),
+              // ),
+
               ElevatedButton(
-                child: Text("Log In using Google"),
+                style: ButtonStyle(backgroundColor:MaterialStateProperty.all<Color>(Colors.white) ),
+                child: Container(
+                  width: 250,
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Container(
+                        child:Image(fit: BoxFit.contain, image: AssetImage("assets/images/glogo.png")),
+                        height: 30,
+                      ),
+                      Text("     Sign in with Google",
+                        style: TextStyle(
+                          // height: 50,
+                          color: Colors.black54,
+                          fontSize: 20,
+                        ),),
+
+                    ],
+                  ),
+                ),
                 onPressed: () async {
                   dynamic result=await _authService.signInWithGoogle();
                   if(result==null){
@@ -31,16 +103,17 @@ class _SigninpageState extends State<Signinpage> {
                   else {
                     print("pappu pass");
                     print(result.uid);
-                    Navigator.pushReplacement<void, void>(
+                    Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute<void>(
+                      MaterialPageRoute(
                         builder: (BuildContext context) => UserHomePage(),
                       ),
                     );
 
                   }
                 },
-              )
+              ),
+              Spacer()
             ],
           ),
         ),

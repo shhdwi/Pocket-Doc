@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:pocket_doc/screens/Signin.dart';
+import 'package:pocket_doc/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../services/UserModel.dart';
+import 'MedRem.dart';
 
 class UserHomePage extends StatefulWidget {
   UserHomePage({Key? key}) : super(key: key);
@@ -69,6 +72,28 @@ class _UserHomePageState extends State<UserHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Health Tracker"),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MedRem()),
+            );}, 
+            icon: Image.asset('assets/images/medrem.png'), 
+            tooltip: 'Medicine Cabinet',
+            ),
+            TextButton(
+              onPressed: () {
+            AuthService().signout();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => Signinpage(),
+              ),
+            );
+            },
+              child: Text("Log Out", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
+            )
+        ],
       ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
