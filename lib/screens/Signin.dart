@@ -22,8 +22,13 @@ class _SigninpageState extends State<Signinpage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+
               Spacer(flex: 1,),
-              Image(image:AssetImage("assets/images/pocdoc.jpg")),
+              Text("Pocket Doc",style: TextStyle(color:Color(0xff447fff),fontSize: 50,fontWeight: FontWeight.bold),),
+              SizedBox(height: 20,),
+              Container(
+                  width: MediaQuery.of(context).size.width-30,
+                  child: Image(image:AssetImage("assets/images/pocdoc.jpg"),fit: BoxFit.fitWidth,)),
               Spacer(),
               // InkWell(
               //
@@ -71,7 +76,7 @@ class _SigninpageState extends State<Signinpage> {
                 style: ButtonStyle(backgroundColor:MaterialStateProperty.all<Color>(Colors.white) ),
                 child: Container(
                   width: 250,
-                  height: 90,
+                  height: 70,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
 
