@@ -80,8 +80,10 @@ class _UserHomePageState extends State<UserHomePage> {
             icon: Image.asset('assets/images/medrem.png'), 
             tooltip: 'Medicine Cabinet',
             ),
-            const TextButton(
-              onPressed: null, 
+            TextButton(
+              onPressed: () {
+            AuthService().signout();
+            },
               child: Text("Log Out", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
             )
         ],

@@ -9,6 +9,7 @@ import 'package:pocket_doc/screens/add_task_bar.dart';
 import 'package:pocket_doc/screens/user_homepage.dart';
 import 'package:pocket_doc/widgets/button.dart';
 
+import '../services/auth.dart';
 import 'Themes/Theme.dart';
 import 'Themes/Theme_Services.dart';
 
@@ -105,8 +106,10 @@ class _MedRemState extends State<MedRem> {
           icon: Image.asset('assets/images/doc.png'),
           tooltip: 'Health Tracker',
         ),
-        const TextButton(
-            onPressed: null,
+        TextButton(
+            onPressed: () {
+              AuthService().signout();
+                  },
             child: Text(
               "Log Out",
               style:
