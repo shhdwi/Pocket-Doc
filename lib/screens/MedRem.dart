@@ -72,7 +72,7 @@ class _MedRemState extends State<MedRem> {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: DatePicker(
-        DateTime.now(),
+        DateTime.now().subtract(const Duration(days: 15)),
         height: 100,
         width: 80,
         initialSelectedDate: DateTime.now(),
