@@ -1,13 +1,17 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:pocket_doc/controller/medicine_controller.dart';
 import 'package:pocket_doc/screens/Themes/Notif_Services.dart';
 import 'package:pocket_doc/screens/add_task_bar.dart';
 import 'package:pocket_doc/widgets/button.dart';
 
+import '../models/medicine.dart';
+import '../widgets/TaskTile.dart';
 import 'Themes/Theme.dart';
 import 'Themes/Theme_Services.dart';
 
@@ -22,6 +26,7 @@ class MedRem extends StatefulWidget {
 
 class _MedRemState extends State<MedRem> {
   DateTime _selectedDate = DateTime.now();
+  final _medController =  Get.put(MedicineController());
 
   var notifyHelper;
 
@@ -41,7 +46,10 @@ class _MedRemState extends State<MedRem> {
       body: Column(
         children:  [
           _addTaskBar(),
-          _addDateBar()
+          _addDateBar(),
+          SizedBox(height: 10),
+          _showMeds(),
+
 
 
 
@@ -49,6 +57,78 @@ class _MedRemState extends State<MedRem> {
       ),
 
 
+    );
+  }
+  _showMeds(){
+    return Expanded(
+        child:Obx((){
+          return ListView.builder(
+            itemCount: _medController.medList.length,
+              itemBuilder: (context ,index){
+              Medicine medicine = _medController.medList[index];
+              if (medicine.repeat=="Daily"){
+                DateTime date =DateFormat.jm().parse(medicine.startTime.toString());
+                var myTime = DateFormat("HH:mm").format(date);
+                notifyHelper.scheduledNotification(
+                  int.parse(myTime.toString().split(":")[0]),
+                  int.parse(myTime.toString().split(":")[1]),
+                  medicine
+                );
+                return AnimationConfiguration.staggeredList(position: index, child:
+                SlideAnimation(
+                  child:  FadeInAnimation(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onLongPress: (){
+                            _medController.delete(medicine);
+                            _medController.getMedicine();
+
+                          },
+                          child: TaskTile(medicine),
+
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+
+              }
+              if (medicine.date==DateFormat.yMd().format(_selectedDate)){
+                DateTime date =DateFormat.jm().parse(medicine.startTime.toString());
+                var myTime = DateFormat("HH:mm").format(date);
+                notifyHelper.scheduledNotification(
+                    int.parse(myTime.toString().split(":")[0]),
+                    int.parse(myTime.toString().split(":")[1]),
+                    medicine);
+                return AnimationConfiguration.staggeredList(position: index, child:
+                SlideAnimation(
+                  child:  FadeInAnimation(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onLongPress: (){
+                            _medController.delete(medicine);
+                            _medController.getMedicine();
+
+                          },
+                          child: TaskTile(medicine),
+
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+
+              }else{
+                return Container();
+              }
+
+
+
+
+    });
+    })
     );
   }
   _addTaskBar(){
@@ -67,7 +147,8 @@ class _MedRemState extends State<MedRem> {
               ],
             ),
           ),
-          MyButton(label: "+ Add Med", onTap: ()=> Get.to(AddTaskPage()))
+          MyButton(label: "+ Add Med", onTap: ()async { await Get.to(AddTaskPage());
+          _medController.getMedicine();})
 
         ],
       ),

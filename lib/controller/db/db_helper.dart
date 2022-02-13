@@ -20,14 +20,9 @@ class DBHelper{
               "id INTEGER PRIMARY KEY AUTOINCREMENT, "
               "title STRING, note TEXT, date STRING, "
               "startTime STRING, endTime STRING, "
-              "remind INTEGER, repeat STRING,"
-          "color INTEGER,"
-            "isCompleted INTEGER,",
-
-
-
-
-
+              "remind INTEGER, repeat STRING, "
+              "color INTEGER,"
+              "isCompleted INTEGER)",
         );
         }
 
@@ -35,6 +30,18 @@ class DBHelper{
     }catch(e){print(e);}
   }
   static Future<int> insert(Medicine? medicine) async{
+    print("inserting values");
     return await _db?.insert(_tableName, medicine!.toJson())??1;
+
   }
+  static Future<List<Map<String,dynamic>>> query() async{
+    print("query function called");
+    return await _db!.query(_tableName);
+
+  }
+  static delete(Medicine medicine)async{
+    await _db!.delete(_tableName,where: 'id=?',whereArgs: [medicine.id]);
+
+  }
+
 }
