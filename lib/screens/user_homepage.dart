@@ -69,6 +69,9 @@ class _UserHomePageState extends State<UserHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Health Tracker"),
+        actions: <Widget>[
+          IconButton(onPressed: null, icon: Image.asset('assets/images/medrem.png'), tooltip: 'Medicine Cabinet',)
+        ],
       ),
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
