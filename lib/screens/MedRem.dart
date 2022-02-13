@@ -15,8 +15,6 @@ import 'Themes/Theme_Services.dart';
 class MedRem extends StatefulWidget {
   const MedRem({Key? key}) : super(key: key);
 
-
-
   @override
   _MedRemState createState() => _MedRemState();
 }
@@ -37,44 +35,40 @@ class _MedRemState extends State<MedRem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.theme.backgroundColor,
+      backgroundColor: Colors.white,
       appBar: _appbar(),
       body: Column(
-        children:  [
-          _addTaskBar(),
-          _addDateBar()
-
-
-
-        ],
+        children: [_addTaskBar(), _addDateBar()],
       ),
-
-
     );
   }
-  _addTaskBar(){
+
+  _addTaskBar() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
+      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(DateFormat.yMMMMd().format(DateTime.now()),style: subHeadingStyle,),
+                Text(
+                  DateFormat.yMMMMd().format(DateTime.now()),
+                  style: subHeadingStyle,
+                ),
                 Text("Today", style: headingStyle),
               ],
             ),
           ),
-          MyButton(label: "+ Add Med", onTap: ()=> Get.to(AddTaskPage()))
-
+          MyButton(label: "+ Add Med", onTap: () => Get.to(AddTaskPage()))
         ],
       ),
     );
   }
-  _addDateBar(){
+
+  _addDateBar() {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: DatePicker(
@@ -86,20 +80,13 @@ class _MedRemState extends State<MedRem> {
         selectedTextColor: Colors.white,
         dateTextStyle: GoogleFonts.lato(
           textStyle: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey
-          ),
+              fontSize: 20, fontWeight: FontWeight.w600, color: Colors.grey),
         ),
-        onDateChange: (date){
-          _selectedDate=date;
-
+        onDateChange: (date) {
+          _selectedDate = date;
         },
-
-
       ),
     );
-
   }
 
   _appbar() {
@@ -126,26 +113,29 @@ class _MedRemState extends State<MedRem> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ))
       ],
-      leading:  GestureDetector(
+      leading: GestureDetector(
         onTap: () {
           ThemeService().switchTheme();
 
-          notifyHelper.displayNotification(title:"Theme Changed",body: !Get.isDarkMode? "Activated Dark Mode": "Activated Light Mode");
+          notifyHelper.displayNotification(
+              title: "Theme Changed",
+              body: !Get.isDarkMode
+                  ? "Activated Dark Mode"
+                  : "Activated Light Mode");
           // notifyHelper.scheduledNotification();
           setState(() {
             notifyHelper.initializeNotification();
-
           });
-
-
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Icon( Get.isDarkMode? Icons.nightlight_round: Icons.light_mode, size: 20,color: Get.isDarkMode? whitey: Color(0xff9c59e8),),
+          child: Icon(
+            Get.isDarkMode ? Icons.nightlight_round : Icons.light_mode,
+            size: 20,
+            color: Get.isDarkMode ? whitey : Color(0xff9c59e8),
+          ),
         ),
-
-      )
-      ,
+      ),
     );
   }
 }
