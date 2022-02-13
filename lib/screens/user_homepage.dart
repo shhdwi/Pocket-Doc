@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+import '../services/UserModel.dart';
 
 class UserHomePage extends StatefulWidget {
   UserHomePage({Key? key}) : super(key: key);
@@ -21,6 +25,8 @@ class _UserHomePageState extends State<UserHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user=Provider.of<MyUser?>(context);
+    final userId=user?.uid;
     var now = DateTime.now();
     DateTime startDate = now.subtract(const Duration(days: 14));
     DateTime dateSelected = now;
@@ -36,124 +42,125 @@ class _UserHomePageState extends State<UserHomePage> {
           .catchError((error) => print("Failed to add user: $error"));
     }
 
-    Future<void> updateStatus(String status) {
-      // Call the user's CollectionReference to add a new user
-      return health_status
-          .where('date', isEqualTo: dateSelected)
-          .where('user', isEqualTo: userId)
-          .set({'user': userId, 'date': dateSelected, 'status': status})
-          .then((value) => print("User Updated"))
-          .catchError((error) => print("Failed to add user: $error"));
-    }
+    // Future<void> updateStatus(String status) {
+    //   // Call the user's CollectionReference to add a new user
+    //   return health_status
+    //       .where('date', isEqualTo: dateSelected)
+    //       .where('user', isEqualTo: userId)
+    //       .set({'user': userId, 'date': dateSelected, 'status': status})
+    //       .then((value) => print("User Updated"))
+    //       .catchError((error) => print("Failed to add user: $error"));
+    // }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Health Tracker"),
       ),
       resizeToAvoidBottomInset: false,
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: <Widget>[
-            VxArc(
-              height: 20,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: const Color(0xff221f2c),
-                ),
-                child: const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
-                  child: Text(
-                    "Hi, how is your health today ?",
-                    textScaleFactor: 4,
-                    style: TextStyle(
-                      color: Color(0xffffffff),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    controller: myController,
-                    decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        borderSide: BorderSide(color: Colors.grey, width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      labelText: 'Your health status',
-                      contentPadding: EdgeInsets.all(16.0),
-                    ),
-                    maxLines: 8,
-                    keyboardType: TextInputType.multiline,
-                  ).px16().py32(),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xff2921cb),
-                onPrimary: Colors.white,
-                textStyle: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () {
-                FirebaseFirestore.instance
-                    .collection('health_status')
-                    .where('date', isEqualTo: dateSelected)
-                    .where('user', isEqualTo: userId)
-                    .get()
-                    .then((DocumentSnapshot documentSnapshot) {
-                  if (documentSnapshot.exists) {
-                    updateStatus(myController.text);
-                  } else {
-                    addStatus(myController.text);
-                  }
-                });
-              },
-              child: const Text('SUBMIT').px32().py8(),
-            ).py16(),
-            Expanded(
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
+      body: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          child: Column(
+            children: <Widget>[
+              VxArc(
+                height: 20,
                 child: Container(
-                  alignment: Alignment.bottomCenter,
-                  child: DatePicker(
-                    startDate,
-                    initialSelectedDate: now,
-                    selectionColor: Color(0xffa7beb7),
-                    selectedTextColor: Colors.white,
-                    onDateChange: (date) {
-                      // New date selected
-                      setState(() {
-                        dateSelected = date;
-                        FirebaseFirestore.instance
-                            .collection('health_status')
-                            .where('date', isEqualTo: dateSelected)
-                            .where('user', isEqualTo: userId)
-                            .get()
-                            .then((DocumentSnapshot documentSnapshot) {
-                          if (documentSnapshot.exists) {
-                            myController.text =
-                                documentSnapshot.data()['status'];
-                          }
-                        });
-                      });
-                    },
+                  decoration: const BoxDecoration(
+                    color: const Color(0xff221f2c),
+                  ),
+                  child:Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+                    child: Text(
+                      "Hi, how is your health today ? ${user?.name}",
+                      textScaleFactor: 4,
+                      style: TextStyle(
+                        color: Color(0xffffffff),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    TextField(
+                      controller: myController,
+                      decoration: const InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        labelText: 'Your health status',
+                        contentPadding: EdgeInsets.all(16.0),
+                      ),
+                      maxLines: 8,
+                      keyboardType: TextInputType.multiline,
+                    ).px16().py32(),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Color(0xff2921cb),
+                  onPrimary: Colors.white,
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                onPressed: () {
+                  // FirebaseFirestore.instance
+                  //     .collection('health_status')
+                  //     .where('date', isEqualTo: dateSelected)
+                  //     .where('user', isEqualTo: userId)
+                  //     .get()
+                  //     .then((DocumentSnapshot documentSnapshot) {
+                  //   if (documentSnapshot.exists) {
+                  //     updateStatus(myController.text);
+                  //   } else {
+                  //     addStatus(myController.text);
+                  //   }
+                  // });
+                },
+                child: const Text('SUBMIT').px32().py8(),
+              ).py16(),
+               Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: DatePicker(
+                      startDate,
+                      initialSelectedDate: now,
+                      selectionColor: Color(0xffa7beb7),
+                      selectedTextColor: Colors.white,
+                      onDateChange: (date) {
+                        // New date selected
+                        // setState(() {
+                        //   dateSelected = date;
+                        //   FirebaseFirestore.instance
+                        //       .collection('health_status')
+                        //       .where('date', isEqualTo: dateSelected)
+                        //       .where('user', isEqualTo: userId)
+                        //       .get()
+                        //       .then((DocumentSnapshot documentSnapshot) {
+                        //     if (documentSnapshot.exists) {
+                        //       myController.text =
+                        //           documentSnapshot.data()['status'];
+                        //     }
+                        //   });
+                        // });
+                      },
+                    ),
+                  ),
+                ),
+
+            ],
+          ),
         ),
       ),
     );
