@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:pocket_doc/screens/Themes/Notif_Services.dart';
 import 'package:pocket_doc/screens/add_task_bar.dart';
+import 'package:pocket_doc/screens/user_homepage.dart';
 import 'package:pocket_doc/widgets/button.dart';
 
 import 'Themes/Theme.dart';
@@ -103,15 +104,28 @@ class _MedRemState extends State<MedRem> {
 
   _appbar() {
     return AppBar(
+      title: const Text("Medicine Cabinet"),
       elevation: 0,
       backgroundColor: context.theme.backgroundColor,
-      actions: [Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CircleAvatar(
-          maxRadius: 18,
-          backgroundImage: NetworkImage("https://lh3.googleusercontent.com/a-/AOh14Gj5gc9rBWyq2RZoqXRO2jPdKNgrcJsmeB0Kr26Vjg=s96-c-rg-br100"),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserHomePage()),
+            );
+          },
+          icon: Image.asset('assets/images/doc.png'),
+          tooltip: 'Health Tracker',
         ),
-      )],
+        const TextButton(
+            onPressed: null,
+            child: Text(
+              "Log Out",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ))
+      ],
       leading:  GestureDetector(
         onTap: () {
           ThemeService().switchTheme();
