@@ -34,8 +34,15 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  get_storage:
+  get:
+  flutter_local_notifications:
+  flutter_native_timezone:
+  intl:
+  google_fonts:
+  date_picker_timeline:
+  sqflite:
   velocity_x: ^3.4.0
-  date_picker_timeline: ^1.2.3
   firebase: ^9.0.2
   firebase_core: ^1.12.0
   firebase_auth: ^3.3.7
@@ -46,6 +53,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
