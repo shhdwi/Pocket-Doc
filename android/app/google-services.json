@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "481648131604",
+    "project_id": "pocket-doctor-2afb2",
+    "storage_bucket": "pocket-doctor-2afb2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:481648131604:android:241c4abeac026029e5f101",
+        "android_client_info": {
+          "package_name": "com.bits.pocket_doc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "481648131604-67t9epvpmd6omefdgpvnoasogpehbc7v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXjXq1AUx7j0GIKfp8llPPr7zk09t-iOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "481648131604-67t9epvpmd6omefdgpvnoasogpehbc7v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
