@@ -15,6 +15,7 @@ class UserHomePage extends StatefulWidget {
 
 class _UserHomePageState extends State<UserHomePage> {
   final myController = TextEditingController();
+  DateTime dateSelected = DateTime.now();
 
   @override
   void dispose() {
@@ -25,32 +26,45 @@ class _UserHomePageState extends State<UserHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final user=Provider.of<MyUser?>(context);
-    final userId=user?.uid;
+    final user = Provider.of<MyUser?>(context);
+    final userId = user?.uid;
+
     var now = DateTime.now();
     DateTime startDate = now.subtract(const Duration(days: 14));
-    DateTime dateSelected = now;
 
     CollectionReference health_status =
         FirebaseFirestore.instance.collection('health_status');
 
     Future<void> addStatus(String status) {
-      // Call the user's CollectionReference to add a new user
+      final snackBarSuccess = SnackBar(
+        content: const Text('Pocket Doc has read your status !'),
+      );
+      final snackBarError = SnackBar(
+        content: const Text('Sorry! Pocket Doc could not read your status.'),
+      );
       return health_status
           .add({'user': userId, 'date': dateSelected, 'status': status})
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
+          .then((value) =>
+              ScaffoldMessenger.of(context).showSnackBar(snackBarSuccess))
+          .catchError((error) =>
+              ScaffoldMessenger.of(context).showSnackBar(snackBarError));
     }
 
-    // Future<void> updateStatus(String status) {
-    //   // Call the user's CollectionReference to add a new user
-    //   return health_status
-    //       .where('date', isEqualTo: dateSelected)
-    //       .where('user', isEqualTo: userId)
-    //       .set({'user': userId, 'date': dateSelected, 'status': status})
-    //       .then((value) => print("User Updated"))
-    //       .catchError((error) => print("Failed to add user: $error"));
-    // }
+    Future<void> updateStatus(String id, String status) {
+      final snackBarSuccess = SnackBar(
+        content: const Text('Pocket Doc has read your status !'),
+      );
+      final snackBarError = SnackBar(
+        content: const Text('Sorry! Pocket Doc could not read your status.'),
+      );
+      return health_status
+          .doc(id)
+          .set({'user': userId, 'date': dateSelected, 'status': status})
+          .then((value) =>
+              ScaffoldMessenger.of(context).showSnackBar(snackBarSuccess))
+          .catchError((error) =>
+              ScaffoldMessenger.of(context).showSnackBar(snackBarError));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -68,11 +82,11 @@ class _UserHomePageState extends State<UserHomePage> {
                   decoration: const BoxDecoration(
                     color: const Color(0xff221f2c),
                   ),
-                  child:Padding(
+                  child: const Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
                     child: Text(
-                      "Hi, how is your health today ? ${user?.name}",
+                      "Hi, how is your health today ?",
                       textScaleFactor: 4,
                       style: TextStyle(
                         color: Color(0xffffffff),
@@ -114,51 +128,55 @@ class _UserHomePageState extends State<UserHomePage> {
                   ),
                 ),
                 onPressed: () {
-                  // FirebaseFirestore.instance
-                  //     .collection('health_status')
-                  //     .where('date', isEqualTo: dateSelected)
-                  //     .where('user', isEqualTo: userId)
-                  //     .get()
-                  //     .then((DocumentSnapshot documentSnapshot) {
-                  //   if (documentSnapshot.exists) {
-                  //     updateStatus(myController.text);
-                  //   } else {
-                  //     addStatus(myController.text);
-                  //   }
-                  // });
+                  FirebaseFirestore.instance
+                      .collection('health_status')
+                      .where('date', isEqualTo: dateSelected)
+                      .where('user', isEqualTo: userId)
+                      .get()
+                      .then((QuerySnapshot querySnapshot) {
+                    if (querySnapshot.docs.isEmpty) {
+                      addStatus(myController.text);
+                    } else {
+                      querySnapshot.docs.forEach((doc) {
+                        updateStatus(doc.id, myController.text);
+                      });
+                    }
+                  });
                 },
                 child: const Text('SUBMIT').px32().py8(),
               ).py16(),
-               Align(
-                  alignment: FractionalOffset.bottomCenter,
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    child: DatePicker(
-                      startDate,
-                      initialSelectedDate: now,
-                      selectionColor: Color(0xffa7beb7),
-                      selectedTextColor: Colors.white,
-                      onDateChange: (date) {
-                        // New date selected
-                        // setState(() {
-                        //   dateSelected = date;
-                        //   FirebaseFirestore.instance
-                        //       .collection('health_status')
-                        //       .where('date', isEqualTo: dateSelected)
-                        //       .where('user', isEqualTo: userId)
-                        //       .get()
-                        //       .then((DocumentSnapshot documentSnapshot) {
-                        //     if (documentSnapshot.exists) {
-                        //       myController.text =
-                        //           documentSnapshot.data()['status'];
-                        //     }
-                        //   });
-                        // });
-                      },
-                    ),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  child: DatePicker(
+                    startDate,
+                    initialSelectedDate: null,
+                    selectionColor: Color(0xffa7beb7),
+                    selectedTextColor: Colors.white,
+                    onDateChange: (date) {
+                      //New date selected
+                      setState(() {
+                        dateSelected = date;
+                        FirebaseFirestore.instance
+                            .collection('health_status')
+                            .where('date', isEqualTo: dateSelected)
+                            .where('user', isEqualTo: userId)
+                            .get()
+                            .then((QuerySnapshot querySnapshot) {
+                          if (querySnapshot.docs.isNotEmpty) {
+                            querySnapshot.docs.forEach((doc) {
+                              myController.text = doc.get('status');
+                            });
+                          } else {
+                            myController.text = "";
+                          }
+                        });
+                      });
+                    },
                   ),
                 ),
-
+              ),
             ],
           ),
         ),
