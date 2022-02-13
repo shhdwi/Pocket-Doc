@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pocket_doc/widgets/MyInputField.dart';
+import 'package:pocket_doc/widgets/button.dart';
 
 import 'Themes/Theme.dart';
 
@@ -14,6 +15,8 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _amtController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   String _EndTime ="9:30 PM";
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -36,6 +39,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
 
   ];
+  int _selectedColor =0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +50,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
           child: Column(
             children: [
               Text("Add Medicine",style: headingStyle,),
-              MyInputField(title: "Name", hint: "Enter the Medicine Name"),
-              MyInputField(title: "Amount", hint: "Doseage amount"),
+              MyInputField(title: "Name", hint: "Enter the Medicine Name",controller: _titleController,),
+              MyInputField(title: "Amount", hint: "Doseage amount",controller: _amtController,),
+
               MyInputField(title: "Date", hint:DateFormat.yMEd().format(_selectedDate),
               widget: IconButton(
                 onPressed:(){
@@ -133,6 +138,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
               ),
               SizedBox(height: 8,),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,18 +149,31 @@ class _AddTaskPageState extends State<AddTaskPage> {
                       SizedBox(height: 8,),
                       Wrap(
                         children: List<Widget>.generate(3, (int index) => GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              _selectedColor=index;
+                            });
+
+
+                          },
 
                           child: Padding(
                             padding: const EdgeInsets.only(right: 8.0),
                             child: CircleAvatar(
                               radius: 14,
                               backgroundColor: index==0?darkpink:index==1?darkergreen:Colors.blueGrey,
+                              child: _selectedColor==index?Icon(Icons.done,
+                              color: Colors.white,
+                              size: 16,):Container(),
+
                             ),
                           ),
                         )),
                       )
                     ],
-                  )
+                  ),
+                  MyButton(label: "Add Medicine", onTap:()=>_validatedata())
+
                 ],
               )
 
@@ -165,6 +185,22 @@ class _AddTaskPageState extends State<AddTaskPage> {
       ),
 
     );
+  }
+  _validatedata(){
+    if(_titleController.text.isNotEmpty&&_amtController.text.isNotEmpty){
+      //add to database
+      Get.back();
+
+    }else if(_titleController.text.isEmpty || _amtController.text.isEmpty){
+      Get.snackbar("Required", "All fields are Required",
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.white,
+        icon: Icon(Icons.warning_amber_rounded)
+      )
+      ;
+
+    }
+
   }
   _appbar() {
     return AppBar(

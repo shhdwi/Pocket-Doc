@@ -36,6 +36,7 @@ class _MedRemState extends State<MedRem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.theme.backgroundColor,
       appBar: _appbar(),
       body: Column(
         children:  [
