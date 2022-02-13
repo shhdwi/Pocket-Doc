@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:pocket_doc/screens/Signin.dart';
 import 'package:pocket_doc/screens/Themes/Notif_Services.dart';
 import 'package:pocket_doc/screens/add_task_bar.dart';
 import 'package:pocket_doc/screens/user_homepage.dart';
@@ -98,10 +99,7 @@ class _MedRemState extends State<MedRem> {
       actions: [
         IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserHomePage()),
-            );
+            Navigator.pop(context);
           },
           icon: Image.asset('assets/images/doc.png'),
           tooltip: 'Health Tracker',
@@ -109,6 +107,16 @@ class _MedRemState extends State<MedRem> {
         TextButton(
             onPressed: () {
               AuthService().signout();
+              // Navigator.popUntil(context, (route) => )
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => Signinpage(),
+                ),
+              );
+
+
                   },
             child: Text(
               "Log Out",

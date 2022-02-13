@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:pocket_doc/screens/Signin.dart';
 import 'package:pocket_doc/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -83,6 +84,12 @@ class _UserHomePageState extends State<UserHomePage> {
             TextButton(
               onPressed: () {
             AuthService().signout();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => Signinpage(),
+              ),
+            );
             },
               child: Text("Log Out", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
             )
