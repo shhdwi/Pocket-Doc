@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pocket_doc/controller/medicine_controller.dart';
 import 'package:pocket_doc/widgets/MyInputField.dart';
 import 'package:pocket_doc/widgets/button.dart';
 
+import '../models/medicine.dart';
 import 'Themes/Theme.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -15,6 +17,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final MedicineController _medicineController =Get.put(MedicineController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amtController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -188,7 +191,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
   _validatedata(){
     if(_titleController.text.isNotEmpty&&_amtController.text.isNotEmpty){
-      //add to database
+      _addMedtoDB();
       Get.back();
 
     }else if(_titleController.text.isEmpty || _amtController.text.isEmpty){
@@ -201,6 +204,25 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
     }
 
+  }
+  _addMedtoDB()async{
+
+    int _value = await _medicineController.addMedicine(
+      medicine:
+
+
+    Medicine(
+      note: _amtController.text,
+      title: _titleController.text,
+      date: DateFormat.yMd().format(_selectedDate),
+      startTime: _startTime,
+      endTime:_EndTime,
+      remind: _selectedRemind,
+      repeat: _selectedRepeated,
+      color: _selectedColor,
+      isCompleted: 0
+    ));
+    print(_value);
   }
   _appbar() {
     return AppBar(
