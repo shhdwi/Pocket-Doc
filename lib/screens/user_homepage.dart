@@ -23,6 +23,28 @@ class _UserHomePageState extends State<UserHomePage> {
   Widget build(BuildContext context) {
     var now = DateTime.now();
     DateTime startDate = now.subtract(const Duration(days: 14));
+    DateTime dateSelected = now;
+
+    CollectionReference health_status =
+        FirebaseFirestore.instance.collection('health_status');
+
+    Future<void> addStatus(String status) {
+      // Call the user's CollectionReference to add a new user
+      return health_status
+          .add({'user': userId, 'date': dateSelected, 'status': status})
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
+    Future<void> updateStatus(String status) {
+      // Call the user's CollectionReference to add a new user
+      return health_status
+          .where('date', isEqualTo: dateSelected)
+          .where('user', isEqualTo: userId)
+          .set({'user': userId, 'date': dateSelected, 'status': status})
+          .then((value) => print("User Updated"))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +62,8 @@ class _UserHomePageState extends State<UserHomePage> {
                   color: const Color(0xff221f2c),
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 32.0),
                   child: Text(
                     "Hi, how is your health today ?",
                     textScaleFactor: 4,
@@ -82,8 +105,21 @@ class _UserHomePageState extends State<UserHomePage> {
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
-              ), 
-              onPressed: () {},
+              ),
+              onPressed: () {
+                FirebaseFirestore.instance
+                    .collection('health_status')
+                    .where('date', isEqualTo: dateSelected)
+                    .where('user', isEqualTo: userId)
+                    .get()
+                    .then((DocumentSnapshot documentSnapshot) {
+                  if (documentSnapshot.exists) {
+                    updateStatus(myController.text);
+                  } else {
+                    addStatus(myController.text);
+                  }
+                });
+              },
               child: const Text('SUBMIT').px32().py8(),
             ).py16(),
             Expanded(
@@ -99,7 +135,18 @@ class _UserHomePageState extends State<UserHomePage> {
                     onDateChange: (date) {
                       // New date selected
                       setState(() {
-                        
+                        dateSelected = date;
+                        FirebaseFirestore.instance
+                            .collection('health_status')
+                            .where('date', isEqualTo: dateSelected)
+                            .where('user', isEqualTo: userId)
+                            .get()
+                            .then((DocumentSnapshot documentSnapshot) {
+                          if (documentSnapshot.exists) {
+                            myController.text =
+                                documentSnapshot.data()['status'];
+                          }
+                        });
                       });
                     },
                   ),
