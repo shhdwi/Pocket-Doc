@@ -113,29 +113,29 @@ class _MedRemState extends State<MedRem> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ))
       ],
-      leading: GestureDetector(
-        onTap: () {
-          ThemeService().switchTheme();
+      // leading: GestureDetector(
+      //   onTap: () {
+      //     ThemeService().switchTheme();
 
-          notifyHelper.displayNotification(
-              title: "Theme Changed",
-              body: !Get.isDarkMode
-                  ? "Activated Dark Mode"
-                  : "Activated Light Mode");
-          // notifyHelper.scheduledNotification();
-          setState(() {
-            notifyHelper.initializeNotification();
-          });
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(
-            Get.isDarkMode ? Icons.nightlight_round : Icons.light_mode,
-            size: 20,
-            color: Get.isDarkMode ? whitey : Color(0xff9c59e8),
-          ),
-        ),
-      ),
+      //     notifyHelper.displayNotification(
+      //         title: "Theme Changed",
+      //         body: !Get.isDarkMode
+      //             ? "Activated Dark Mode"
+      //             : "Activated Light Mode");
+      //     // notifyHelper.scheduledNotification();
+      //     setState(() {
+      //       notifyHelper.initializeNotification();
+      //     });
+      //   },
+      //   child: Padding(
+      //     padding: const EdgeInsets.all(8.0),
+      //     child: Icon(
+      //       Get.isDarkMode ? Icons.nightlight_round : Icons.light_mode,
+      //       size: 20,
+      //       color: Get.isDarkMode ? whitey : Color(0xff9c59e8),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
